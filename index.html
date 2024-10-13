@@ -86,7 +86,7 @@
         let result = singleWord ? wordA + wordB : wordA + " " + wordB;
         document.getElementById("result").innerText = result;
         if (result.length > 15) {
-            document.getElementById("recommendation").innerText = "「一語にする」を推奨します。";
+            document.getElementById("recommendation").innerText = "「一語にする」をオフにすることを推奨します。";
         } else {
             document.getElementById("recommendation").innerText = "";
         }
