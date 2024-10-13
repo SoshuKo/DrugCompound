@@ -36,10 +36,10 @@
                 }
             } else {
                 if (femaleVowels.some(v => wordB.includes(v))) {
-                    transformedWordA = replaceVowels(wordA, femaleReplacement) + '’ün';
+                    transformedWordA = replaceVowels(wordA, femaleReplacement) + "'ün";
                     transformedWordB += "'ü";
                 } else if (maleVowels.some(v => wordB.includes(v))) {
-                    transformedWordA = replaceVowels(wordA, maleReplacement) + '’un';
+                    transformedWordA = replaceVowels(wordA, maleReplacement) + "'un";
                     transformedWordB += "'u";
                 } else {
                     transformedWordA += "'un";
