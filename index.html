@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ドゥルグ語複合名詞作成機</title>
+</head>
+<body>
+  <h1>ドゥルグ語複合名詞作成機</h1>
+  <form id="noun-form">
+    <label for="wordA">単語A：</label>
+    <input type="text" id="wordA" name="wordA"><br>
+    
+    <label for="wordB">単語B：</label>
+    <input type="text" id="wordB" name="wordB"><br>
+    
+    <p>名詞の場合は単数形・主格を、動詞・形容詞の場合は不定形を入力してください（=辞書に載っている形を入力してください）。</p>
+    <p>自動詞とは辞書形の語尾が-um, -üm、他動詞とは辞書形の語尾が-amのものです。</p>
+    
+    <label for="combination">組み合わせ：</label>
+    <select id="combination" name="combination">
+      <option value="noun+noun">名詞+名詞</option>
+      <option value="adj/verb+noun">形容詞/自動詞分詞+名詞</option>
+      <option value="transitive+noun">他動詞分詞+名詞</option>
+    </select><br>
+    
+    <label for="aspect">相：</label>
+    <select id="aspect" name="aspect">
+      <option value="incomplete">未完了相</option>
+      <option value="complete">完了相</option>
+    </select><br>
+    
+    <label for="plural">複数形：</label>
+    <input type="checkbox" id="plural" name="plural"><br>
+    
+    <label for="one-word">1語にする：</label>
+    <input type="checkbox" id="one-word" name="one-word"><br>
+    
+    <button type="button" onclick="createCompoundNoun()">生成</button>
+  </form>
+  
+  <p id="result"></p>
+
+  <script>
+    function createCompoundNoun() {
+      const wordA = document.getElementById('wordA').value;
+      const wordB = document.getElementById('wordB').value;
+      const combination = document.getElementById('combination').value;
+      const aspect = document.getElementById('aspect').value;
+      const plural = document.getElementById('plural').checked;
+      const oneWord = document.getElementById('one-word').checked;
+      
+      let result = '';
+      
+      // 名詞+名詞の処理
+      if (combination === 'noun+noun') {
+        if (!plural) {
+          result = processNounNoun(wordA, wordB, oneWord);
+        } else {
+          result = processNounNounPlural(wordA, wordB, oneWord);
+        }
+      }
+      // 形容詞/自動詞分詞+名詞の処理
+      else if (combination === 'adj/verb+noun') {
+        result = processAdjVerbNoun(wordA, wordB, aspect, plural, oneWord);
+      }
+      // 他動詞分詞+名詞の処理
+      else if (combination === 'transitive+noun') {
+        result = processTransitiveNoun(wordA, wordB, aspect, plural, oneWord);
+      }
+      
+      document.getElementById('result').innerText = result;
+    }
+
+    function processNounNoun(wordA, wordB, oneWord) {
+      let result = applyVowelChange(wordA, wordB, 'noun');
+      result += wordB;
+      if (oneWord) {
+        return result.replace(' ', '');
+      }
+      return result;
+    }
+
+    function processNounNounPlural(wordA, wordB, oneWord) {
+      let result = applyVowelChange(wordA, wordB, 'noun') + "'";
+      result += wordA.includes('i') || wordA.includes('ü') || wordA.includes('e') || wordA.includes('ö') ? 'ün' : 'un';
+      result += " " + wordB + "'";
+      result += wordB.includes('i') || wordB.includes('ü') || wordB.includes('e') || wordB.includes('ö') ? 'i' : 'u';
+      if (oneWord) {
+        return result.replace(/ /g, '').replace(/'/g, '');
+      }
+      return result;
+    }
+
+    function processAdjVerbNoun(wordA, wordB, aspect, plural, oneWord) {
+      let suffix = aspect === 'complete' ? 'dru' : 'du';
+      if (wordA.endsWith('üm')) {
+        wordA = wordA.replace('üm', aspect === 'complete' ? 'drü' : 'dü');
+      } else if (wordA.endsWith('um')) {
+        wordA = wordA.replace('um', suffix);
+      }
+      
+      let result = applyVowelChange(wordA, wordB, 'verb');
+      if (plural) {
+        result += "lu";
+      }
+      
+      result += " " + wordB;
+      if (oneWord) {
+        return result.replace(' ', '');
+      }
+      return result;
+    }
+
+    function processTransitiveNoun(wordA, wordB, aspect, plural, oneWord) {
+      let suffix = aspect === 'complete' ? 'gru' : 'gu';
+      if (wordA.endsWith('am')) {
+        wordA = wordA.replace('am', suffix);
+      }
+      
+      let result = applyVowelChange(wordA, wordB, 'verb');
+      if (plural) {
+        result += "lu";
+      }
+      
+      result += " " + wordB;
+      if (oneWord) {
+        return result.replace(' ', '');
+      }
+      return result;
+    }
+
+    function applyVowelChange(wordA, wordB, type) {
+      const vowelMapping = {
+        'i': 'ï', 'ü': 'u', 'e': 'ë', 'ö': 'o',
+        'ï': 'i', 'u': 'ü', 'ë': 'e', 'o': 'ö'
+      };
+
+      let result = wordA;
+      for (let vowel of wordB) {
+        if (vowelMapping[vowel]) {
+          result = result.replace(new RegExp(vowel, 'g'), vowelMapping[vowel]);
+        }
+      }
+      return type === 'noun' ? result : result + "nü";
+    }
+  </script>
+</body>
+</html>
