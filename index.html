@@ -12,9 +12,6 @@
         const plural = document.getElementById("plural").checked;
         const singleWord = document.getElementById("singleWord").checked;
 
-        let transformedWordA = wordA;
-        let transformedWordB = wordB;
-
         const femaleVowels = ['i', 'ü', 'e', 'ö'];
         const maleVowels = ['ï', 'u', 'ë', 'o'];
         const femaleReplacement = { 'ï': 'i', 'u': 'ü', 'ë': 'e', 'o': 'ö' };
@@ -28,64 +25,66 @@
         if (nounType === "名詞+名詞") {
             if (!plural) {
                 if (femaleVowels.some(v => wordB.includes(v))) {
-                    transformedWordA = replaceVowels(wordA, femaleReplacement) + 'nü';
+                    wordA = replaceVowels(wordA, femaleReplacement) + 'nü';
                 } else if (maleVowels.some(v => wordB.includes(v))) {
-                    transformedWordA = replaceVowels(wordA, maleReplacement) + 'nu';
+                    wordA = replaceVowels(wordA, maleReplacement) + 'nu';
                 } else {
-                    transformedWordA += 'nu';
+                    wordA += 'nu';
                 }
             } else {
                 if (femaleVowels.some(v => wordB.includes(v))) {
-                    transformedWordA = replaceVowels(wordA, femaleReplacement) + "'ün";
-                    transformedWordB += "'ü";
+                    wordA = replaceVowels(wordA, femaleReplacement) + "'ün";
+                    wordB += "'ü";
                 } else if (maleVowels.some(v => wordB.includes(v))) {
-                    transformedWordA = replaceVowels(wordA, maleReplacement) + "'un";
-                    transformedWordB += "'u";
+                    wordA = replaceVowels(wordA, maleReplacement) + "'un";
+                    wordB += "'u";
                 } else {
-                    transformedWordA += "'un";
-                    transformedWordB += "'u";
+                    wordA += "'un";
+                    wordB += "'u";
                 }
             }
         }
         // 形容詞/自動詞分詞+名詞
         else if (nounType === "形容詞/自動詞分詞+名詞") {
+            wordA = replaceVowels(wordA, femaleVowels.some(v => wordB.includes(v)) ? femaleReplacement : maleReplacement);
+
             if (!plural) {
-                transformedWordA = wordA.replace(/-um|-üm/g, match => match === '-um' ? (aspect === "未完了相" ? 'du' : 'dru') : (aspect === "未完了相" ? 'dü' : 'drü'));
+                wordA = wordA.replace(/-um|-üm/g, match => match === '-um' ? (aspect === "未完了相" ? 'du' : 'dru') : (aspect === "未完了相" ? 'dü' : 'drü'));
             } else {
-                transformedWordA = wordA.replace(/-um|-üm/g, match => match === '-um' ? (aspect === "未完了相" ? 'dulu' : 'dullu') : (aspect === "未完了相" ? 'dülü' : 'düllü'));
+                wordA = wordA.replace(/-um|-üm/g, match => match === '-um' ? (aspect === "未完了相" ? 'dulu' : 'dullu') : (aspect === "未完了相" ? 'dülü' : 'düllü'));
                 if (femaleVowels.some(v => wordB.includes(v))) {
-                    transformedWordB += "'ü";
+                    wordB += "'ü";
                 } else {
-                    transformedWordB += "'u";
+                    wordB += "'u";
                 }
             }
         }
         // 他動詞分詞+名詞
         else if (nounType === "他動詞分詞+名詞") {
+            wordA = replaceVowels(wordA, femaleVowels.some(v => wordB.includes(v)) ? femaleReplacement : maleReplacement);
+
             if (!plural) {
-                transformedWordA = wordA.replace(/-am/g, match => {
+                wordA = wordA.replace(/-am/g, match => {
                     if (maleVowels.some(v => wordA.includes(v))) return aspect === "未完了相" ? 'gu' : 'gru';
                     if (femaleVowels.some(v => wordA.includes(v))) return aspect === "未完了相" ? 'gü' : 'grü';
                     return aspect === "未完了相" ? 'gu' : 'gru';
                 });
             } else {
-                transformedWordA = wordA.replace(/-am/g, match => {
+                wordA = wordA.replace(/-am/g, match => {
                     if (maleVowels.some(v => wordA.includes(v))) return aspect === "未完了相" ? 'gulu' : 'gullu';
                     if (femaleVowels.some(v => wordA.includes(v))) return aspect === "未完了相" ? 'gülü' : 'güllü';
                     return aspect === "未完了相" ? 'gulu' : 'gullu';
                 });
                 if (femaleVowels.some(v => wordB.includes(v))) {
-                    transformedWordB += "'i";
+                    wordB += "'i";
                 } else {
-                    transformedWordB += "'u";
+                    wordB += "'u";
                 }
             }
         }
 
-        let result = singleWord ? transformedWordA + transformedWordB : transformedWordA + " " + transformedWordB;
-
+        let result = singleWord ? wordA + wordB : wordA + " " + wordB;
         document.getElementById("result").innerText = result;
-
         if (result.length > 15) {
             document.getElementById("recommendation").innerText = "「一語にする」を推奨します。";
         } else {
