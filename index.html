@@ -13,9 +13,9 @@
         const singleWord = document.getElementById("singleWord").checked;
 
         const femaleVowels = ['i', 'ü', 'e', 'ö'];
-        const maleVowels = ['ï', 'u', 'ë', 'o'];
-        const femaleReplacement = { 'ï': 'i', 'u': 'ü', 'ë': 'e', 'o': 'ö' };
-        const maleReplacement = { 'i': 'ï', 'ü': 'u', 'e': 'ë', 'ö': 'o' };
+        const maleVowels = ['uy', 'u', 'oy', 'o'];
+        const femaleReplacement = { 'uy': 'i', 'u': 'ü', 'oy': 'e', 'o': 'ö' };
+        const maleReplacement = { 'i': 'uy', 'ü': 'u', 'e': 'oy', 'ö': 'o' };
 
         function replaceVowels(word, replacement) {
             return word.split('').map(char => replacement[char] || char).join('');
