@@ -37,13 +37,13 @@
             } else {
                 if (femaleVowels.some(v => wordB.includes(v))) {
                     transformedWordA = replaceVowels(wordA, femaleReplacement) + '’ün';
-                    transformedWordB += '’i';
+                    transformedWordB += "'ü";
                 } else if (maleVowels.some(v => wordB.includes(v))) {
                     transformedWordA = replaceVowels(wordA, maleReplacement) + '’un';
-                    transformedWordB += '’u';
+                    transformedWordB += "'u";
                 } else {
-                    transformedWordA += '’un';
-                    transformedWordB += '’u';
+                    transformedWordA += "'un";
+                    transformedWordB += "'u";
                 }
             }
         }
@@ -54,9 +54,9 @@
             } else {
                 transformedWordA = wordA.replace(/-um|-üm/g, match => match === '-um' ? (aspect === "未完了相" ? 'dulu' : 'dullu') : (aspect === "未完了相" ? 'dülü' : 'düllü'));
                 if (femaleVowels.some(v => wordB.includes(v))) {
-                    transformedWordB += '’i';
+                    transformedWordB += "'ü";
                 } else {
-                    transformedWordB += '’u';
+                    transformedWordB += "'u";
                 }
             }
         }
@@ -75,9 +75,9 @@
                     return aspect === "未完了相" ? 'gulu' : 'gullu';
                 });
                 if (femaleVowels.some(v => wordB.includes(v))) {
-                    transformedWordB += '’i';
+                    transformedWordB += "'i";
                 } else {
-                    transformedWordB += '’u';
+                    transformedWordB += "'u";
                 }
             }
         }
