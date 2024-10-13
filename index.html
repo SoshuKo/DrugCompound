@@ -13,9 +13,9 @@
         const singleWord = document.getElementById("singleWord").checked;
 
         const femaleVowels = ['i', 'ü', 'e', 'ö'];
-        const maleVowels = ['uy', 'u', 'oy', 'o'];
+        const maleVowels = ['uĭ', 'u', 'oĭ', 'o'];
         const femaleReplacement = { 'uy': 'i', 'u': 'ü', 'oy': 'e', 'o': 'ö' };
-        const maleReplacement = { 'i': 'uy', 'ü': 'u', 'e': 'oy', 'ö': 'o' };
+        const maleReplacement = { 'i': 'uĭ', 'ü': 'u', 'e': 'oĭ', 'ö': 'o' };
 
         function replaceVowels(word, replacement) {
             return word.split('').map(char => replacement[char] || char).join('');
@@ -84,6 +84,10 @@
         }
 
         let result = singleWord ? wordA + wordB : wordA + " " + wordB;
+        
+        // 追加された変換
+        result = result.replace(/üĭ/g, 'i').replace(/öĭ/g, 'e');
+
         document.getElementById("result").innerText = result;
         if (result.length > 15) {
             document.getElementById("recommendation").innerText = "「一語にする」をオフにすることを推奨します。";
